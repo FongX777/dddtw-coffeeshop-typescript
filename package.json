@@ -1,0 +1,28 @@
+{
+  "name": "dddtw-coffeeshop-type-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check",
+    "dev": "NODE_ENV=dev ts-node-dev --respawn --transpileOnly ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.0.3",
+    "gts": "^1.1.0",
+    "jest": "^24.9.0",
+    "ts-node-dev": "^1.0.0-pre.41",
+    "tslint": "^5.19.0",
+    "typescript": "~3.5.0"
+  }
+}
