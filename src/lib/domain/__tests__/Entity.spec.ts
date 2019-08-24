@@ -12,6 +12,13 @@ class TestEntity extends Entity<TestEntityId, TestEntityProps> {
     this.setName(params.name);
     this.setEmail(params.email);
   }
+  get name(): string {
+    return this.props.name;
+  }
+  get email(): string {
+    return this.props.email;
+  }
+
   private setName(name: string): void {
     if (name === '') {
       throw new Error('');
@@ -29,7 +36,8 @@ class TestEntity extends Entity<TestEntityId, TestEntityProps> {
 describe('Entity', () => {
   const name = 'test';
   const email = 'test@mail.com';
-  const testEntityId = new TestEntityId('123456');
+  const idValue = '123456';
+  const testEntityId = new TestEntityId(idValue);
   const testEntity = new TestEntity(testEntityId, {
     name,
     email,
@@ -51,5 +59,23 @@ describe('Entity', () => {
       name: newName,
       email: newEmail,
     });
+  });
+
+  it('should have equality', () => {
+    const testEntity2 = new TestEntity(new TestEntityId(idValue), {
+      name,
+      email,
+    });
+    const testEntityWithDifferentId = new TestEntity(
+      new TestEntityId('654321'),
+      {
+        name,
+        email,
+      }
+    );
+
+    expect(testEntity.equals(testEntity2)).toBeTruthy();
+    expect(testEntityWithDifferentId.equals(testEntity2)).toBeFalsy();
+    expect(testEntity.equals()).toBeFalsy();
   });
 });

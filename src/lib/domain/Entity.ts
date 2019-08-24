@@ -32,10 +32,10 @@ export abstract class Entity<
       return true;
     }
 
-    const isEntity = (v: any, Class: any): boolean => {
-      return v instanceof Class;
+    const isEntity = (v: any): v is Entity<ID, Props> => {
+      return v instanceof Entity;
     };
-    if (!isEntity(obj, this)) {
+    if (!isEntity(obj)) {
       return false;
     }
 
