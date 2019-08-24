@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       # This step uses the hello-world-action stored in this workflow's repository.
-      - uses: ./hello-world-action
+      - uses: .github/workflows/hello-world-action
         with:
           who-to-greet: "Octocat"
         id: hello
