@@ -1,30 +1,30 @@
 ﻿import { EntityId } from './EntityId';
 
-export interface EntityProps {
-  [index: string]: any;
+export interface EntityProps<Id extends EntityId<any>> {
+  id: Id;
+  [index: string]: unknown;
 }
 
-export abstract class Entity<
-  ID extends EntityId<unknown>,
-  Props extends EntityProps
-> {
-  public readonly id: ID;
+export abstract class Entity<Props extends EntityProps<EntityId<unknown>>> {
   protected props: Props;
 
-  constructor(id: ID, props: Props) {
-    this.id = id;
+  constructor(props: Props) {
     this.props = props;
+  }
+
+  get id() {
+    return this.props.id;
   }
 
   /**
    * For testing usage
    */
-  public getProps() {
+  getProps() {
     return this.props;
   }
 
-  public equals(obj?: Entity<ID, Props>): boolean {
-    if (obj == null || obj == undefined) {
+  equals(obj?: Entity<Props>): boolean {
+    if (obj == null || obj === undefined) {
       return false;
     }
 
@@ -32,7 +32,7 @@ export abstract class Entity<
       return true;
     }
 
-    const isEntity = (v: any): v is Entity<ID, Props> => {
+    const isEntity = (v: unknown): v is Entity<Props> => {
       return v instanceof Entity;
     };
     if (!isEntity(obj)) {

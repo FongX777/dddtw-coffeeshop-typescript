@@ -1,19 +1,6 @@
-﻿interface ValueObjectProps {
-  [index: string]: any;
+﻿export interface ValueObjectProps {
+  [index: string]: unknown;
 }
-
-const shallowEqual = (obj1: any, obj2: any) => {
-  const objectKeys = Object.keys(obj2.props);
-  const thisKeys = Object.keys(obj1.props);
-
-  if (objectKeys.length !== thisKeys.length) {
-    return false;
-  }
-  return objectKeys.every(
-    key =>
-      !obj2.props.hasOwnProperty(key) || obj2.props[key] !== obj1.props[key]
-  );
-};
 
 export class ValueObject<Props extends ValueObjectProps> {
   props: Readonly<Props>;
@@ -33,6 +20,20 @@ export class ValueObject<Props extends ValueObjectProps> {
     if (obj.props === undefined) {
       return false;
     }
-    return shallowEqual(this, obj);
+    const shallowObjectEqual = <T extends ValueObjectProps>(
+      props1: T,
+      props2: T
+    ) => {
+      const keys1 = Object.keys(props2);
+      const keys2 = Object.keys(props1);
+
+      if (keys1.length !== keys2.length) {
+        return false;
+      }
+      return keys1.every(
+        key => props2.hasOwnProperty(key) && props2[key] === props1[key]
+      );
+    };
+    return shallowObjectEqual<ValueObjectProps>(this.props, obj.props);
   }
 }

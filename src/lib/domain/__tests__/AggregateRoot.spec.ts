@@ -1,8 +1,9 @@
+import { EntityProps } from '../Entity';
 import { EntityId } from '../EntityId';
-import { IDomainEvent } from '../event/IDomainEvent';
+import { DomainEvent } from '../event/DomainEvent';
 import { AggregateRoot } from '../AggregateRoot';
 
-class CreateEvent implements IDomainEvent {
+class CreateEvent implements DomainEvent {
   occuredDate: Date;
   aggregateId: EntityId<unknown>;
   constructor(aggregateId: EntityId<unknown>) {
@@ -12,11 +13,13 @@ class CreateEvent implements IDomainEvent {
 }
 
 class TestEntityId extends EntityId<string> {}
-interface TestEntityProps {}
-class TestAggregateRoot extends AggregateRoot<TestEntityId, TestEntityProps> {
+interface TestEntityProps extends EntityProps<TestEntityId> {
+  id: TestEntityId;
+}
+class TestAggregateRoot extends AggregateRoot<TestEntityProps> {
   static create(): TestAggregateRoot {
     const id = new TestEntityId('12345677');
-    const testAggregateRoot = new TestAggregateRoot(id, {});
+    const testAggregateRoot = new TestAggregateRoot({ id });
     testAggregateRoot.addDomainEvent(new CreateEvent(id));
     return testAggregateRoot;
   }
@@ -24,7 +27,7 @@ class TestAggregateRoot extends AggregateRoot<TestEntityId, TestEntityProps> {
 
 describe('Aggregate Root', () => {
   const testEntityId = new TestEntityId('123456');
-  const testAggregateRoot = new TestAggregateRoot(testEntityId, {});
+  const testAggregateRoot = new TestAggregateRoot({ id: testEntityId });
   const ag = TestAggregateRoot.create();
   it('should have domain events', () => {
     expect(testAggregateRoot.domainEvents.length).toBe(0);

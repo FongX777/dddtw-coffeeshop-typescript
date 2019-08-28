@@ -1,5 +1,5 @@
 import { EntityId } from '../EntityId';
-export interface IDomainEvent {
+export interface DomainEvent {
   occuredDate: Date;
   aggregateId: EntityId<unknown>;
 }

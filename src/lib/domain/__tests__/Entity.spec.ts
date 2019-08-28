@@ -1,13 +1,14 @@
 import { EntityId } from '../EntityId';
-import { Entity } from '../Entity';
+import { Entity, EntityProps } from '../Entity';
 
 class TestEntityId extends EntityId<string> {}
-interface TestEntityProps {
+interface TestEntityProps extends EntityProps<TestEntityId> {
+  id: TestEntityId;
   name: string;
   email: string;
 }
 
-class TestEntity extends Entity<TestEntityId, TestEntityProps> {
+class TestEntity extends Entity<TestEntityProps> {
   changeAll(params: { name: string; email: string }) {
     this.setName(params.name);
     this.setEmail(params.email);
@@ -38,7 +39,8 @@ describe('Entity', () => {
   const email = 'test@mail.com';
   const idValue = '123456';
   const testEntityId = new TestEntityId(idValue);
-  const testEntity = new TestEntity(testEntityId, {
+  const testEntity = new TestEntity({
+    id: testEntityId,
     name,
     email,
   });
@@ -62,17 +64,16 @@ describe('Entity', () => {
   });
 
   it('should have equality', () => {
-    const testEntity2 = new TestEntity(new TestEntityId(idValue), {
+    const testEntity2 = new TestEntity({
+      id: new TestEntityId(idValue),
       name,
       email,
     });
-    const testEntityWithDifferentId = new TestEntity(
-      new TestEntityId('654321'),
-      {
-        name,
-        email,
-      }
-    );
+    const testEntityWithDifferentId = new TestEntity({
+      id: new TestEntityId('654321'),
+      name,
+      email,
+    });
 
     expect(testEntity.equals(testEntity2)).toBeTruthy();
     expect(testEntityWithDifferentId.equals(testEntity2)).toBeFalsy();
