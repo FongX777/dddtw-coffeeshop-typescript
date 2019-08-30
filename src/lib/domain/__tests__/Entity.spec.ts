@@ -57,10 +57,8 @@ describe('Entity', () => {
       email: newEmail,
     });
     const receviedProps = testEntity.getProps();
-    expect(receviedProps).toEqual({
-      name: newName,
-      email: newEmail,
-    });
+    expect(receviedProps.name).toBe(newName);
+    expect(receviedProps.email).toBe(newEmail);
   });
 
   it('should have equality', () => {

@@ -1,11 +1,11 @@
 ﻿import { EntityId } from './EntityId';
 
-export interface EntityProps<Id extends EntityId<any>> {
+export interface EntityProps<Id extends EntityId<unknown>> {
   id: Id;
   [index: string]: unknown;
 }
 
-export abstract class Entity<Props extends EntityProps<EntityId<unknown>>> {
+export class Entity<Props extends EntityProps<EntityId<unknown>>> {
   protected props: Props;
 
   constructor(props: Props) {

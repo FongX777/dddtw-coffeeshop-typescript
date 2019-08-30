@@ -1,27 +1,28 @@
 import { DomainEvent } from './DomainEvent';
 import { AggregateRoot } from '../AggregateRoot';
 import { EntityId } from '../EntityId';
+import { EntityProps } from '../Entity';
 
 type CallbackFunctionType = (event: DomainEvent) => void;
 
-class DomainEventsHandler {
-  private static instance: DomainEventsHandler;
+class DomainEventsHandler<Props extends EntityProps<EntityId<unknown>>> {
+  // private static instance: DomainEventsHandler<unknown>;
   private handlersMap: {
     [index: string]: CallbackFunctionType[];
   };
 
-  private constructor() {
+  constructor() {
     this.handlersMap = {};
   }
 
-  static getInstance() {
-    if (!DomainEventsHandler.instance) {
-      DomainEventsHandler.instance = new DomainEventsHandler();
-    }
-    return DomainEventsHandler.instance;
-  }
+  // static getInstance() {
+  //   if (!DomainEventsHandler.instance) {
+  //     DomainEventsHandler.instance = new DomainEventsHandler();
+  //   }
+  //   return DomainEventsHandler.instance;
+  // }
 
-  private markedAggregates: AggregateRoot<any>[] = [];
+  private markedAggregates: Array<AggregateRoot<Props>> = [];
 
   /**
    * @method markAggregateForDispatch
@@ -29,7 +30,7 @@ class DomainEventsHandler {
    * events to eventually be dispatched when the infrastructure commits
    * the unit of work.
    */
-  markAggregateForDispatch(aggregate: AggregateRoot<any>): void {
+  markAggregateForDispatch(aggregate: AggregateRoot<Props>): void {
     const aggregateFound = !!this.findMarkedAggregateByID(aggregate.id);
 
     if (!aggregateFound) {
@@ -37,14 +38,14 @@ class DomainEventsHandler {
     }
   }
 
-  private dispatchAggregateEvents(aggregate: AggregateRoot<any>): void {
+  private dispatchAggregateEvents(aggregate: AggregateRoot<Props>): void {
     aggregate.domainEvents.forEach((event: DomainEvent) =>
       this.dispatch(event)
     );
   }
 
   private removeAggregateFromMarkedDispatchList(
-    aggregate: AggregateRoot<any>
+    aggregate: AggregateRoot<Props>
   ): void {
     const index = this.markedAggregates.findIndex(a => a.equals(aggregate));
     this.markedAggregates.splice(index, 1);
@@ -52,9 +53,9 @@ class DomainEventsHandler {
 
   private findMarkedAggregateByID(
     id: EntityId<unknown>
-  ): AggregateRoot<any> | undefined {
-    let found: AggregateRoot<any> | undefined;
-    for (let aggregate of this.markedAggregates) {
+  ): AggregateRoot<Props> | undefined {
+    let found: AggregateRoot<Props> | undefined;
+    for (const aggregate of this.markedAggregates) {
       if (aggregate.id.equals(id)) {
         found = aggregate;
       }
@@ -96,12 +97,13 @@ class DomainEventsHandler {
 
     if (this.handlersMap.hasOwnProperty(eventClassName)) {
       const handlers: CallbackFunctionType[] = this.handlersMap[eventClassName];
-      for (let handler of handlers) {
+      for (const handler of handlers) {
         handler(event);
       }
     }
   }
 }
 
-const domainEventsHandler = DomainEventsHandler.getInstance();
+// const domainEventsHandler = DomainEventsHandler.getInstance();
+const domainEventsHandler = new DomainEventsHandler();
 export { domainEventsHandler };
