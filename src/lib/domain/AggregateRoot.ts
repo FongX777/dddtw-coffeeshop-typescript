@@ -1,11 +1,12 @@
-import { Entity, EntityProps } from './Entity';
+import { Entity } from './Entity';
+import { EntityId } from './EntityId';
 import { DomainEvent } from './event/DomainEvent';
 import { domainEventsHandler } from './event/domainEventsHandler';
-import { EntityId } from './EntityId';
 
 export abstract class AggregateRoot<
-  Props extends EntityProps<EntityId<unknown>>
-> extends Entity<Props> {
+  Id extends EntityId<unknown>,
+  Props
+> extends Entity<Id, Props> {
   private _domainEvents: DomainEvent[] = [];
 
   get domainEvents(): DomainEvent[] {
