@@ -2,7 +2,7 @@
   [index: string]: unknown;
 }
 
-export abstract class ValueObject<Props extends ValueObjectProps> {
+export abstract class ValueObject<Props> {
   props: Readonly<Props>;
 
   constructor(props: Props) {

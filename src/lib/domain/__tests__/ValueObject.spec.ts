@@ -1,6 +1,6 @@
-import { ValueObject, ValueObjectProps } from '../ValueObject';
+import { ValueObject } from '../ValueObject';
 
-interface TestVoProps extends ValueObjectProps {
+interface TestVoProps {
   name: string;
   email: string;
 }

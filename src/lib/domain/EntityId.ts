@@ -1,6 +1,6 @@
-﻿import { ValueObject, ValueObjectProps } from './ValueObject';
+﻿import { ValueObject } from './ValueObject';
 
-interface EntityIdProps<Value> extends ValueObjectProps {
+interface EntityIdProps<Value> {
   value: Value;
   occuredDate: Date;
 }
