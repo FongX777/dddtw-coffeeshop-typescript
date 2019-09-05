@@ -1,8 +1,8 @@
-﻿export interface ValueObjectProps {
+﻿interface LiteralObject {
   [index: string]: unknown;
 }
 
-export abstract class ValueObject<Props> {
+export abstract class ValueObject<Props extends {}> {
   props: Readonly<Props>;
 
   constructor(props: Props) {
@@ -20,9 +20,9 @@ export abstract class ValueObject<Props> {
     if (obj.props === undefined) {
       return false;
     }
-    const shallowObjectEqual = <T extends ValueObjectProps>(
-      props1: T,
-      props2: T
+    const shallowObjectEqual = (
+      props1: LiteralObject,
+      props2: LiteralObject
     ) => {
       const keys1 = Object.keys(props2);
       const keys2 = Object.keys(props1);
@@ -34,6 +34,6 @@ export abstract class ValueObject<Props> {
         key => props2.hasOwnProperty(key) && props2[key] === props1[key]
       );
     };
-    return shallowObjectEqual<ValueObjectProps>(this.props, obj.props);
+    return shallowObjectEqual(this.props, obj.props);
   }
 }
