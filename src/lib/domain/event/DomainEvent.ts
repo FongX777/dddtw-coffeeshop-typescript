@@ -1,5 +1,6 @@
-import { EntityId } from '../EntityId';
-export interface DomainEvent {
-  occuredDate: Date;
-  aggregateId: EntityId<unknown>;
+export abstract class DomainEvent {
+  readonly occuredOn: Date;
+  constructor() {
+    this.occuredOn = new Date();
+  }
 }
