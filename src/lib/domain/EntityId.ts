@@ -19,18 +19,18 @@ export abstract class EntityId<Value> extends ValueObject<
     return this.props.value;
   }
 
-  public toString(): string {
+  toString(): string {
     const constructorName = this.constructor.name;
     return `${constructorName}(${String(
       this.props.value
     )})-${this.occuredDate.toISOString()}`;
   }
 
-  public toValue(): Value {
+  toValue(): Value {
     return this.props.value;
   }
 
-  public equals(entityId: EntityId<Value>): boolean {
+  equals(entityId: EntityId<Value>): boolean {
     if (entityId === null || entityId === undefined) {
       return false;
     }

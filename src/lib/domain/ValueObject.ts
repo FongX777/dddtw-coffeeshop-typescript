@@ -1,20 +1,8 @@
-﻿interface ValueObjectProps {
-  [index: string]: any;
+﻿interface LiteralObject {
+  [index: string]: unknown;
 }
 
-const shallowEqual = (thisObj: any, obj: any) => {
-  const objectKeys = Object.keys(obj.props);
-  const thisKeys = Object.keys(thisObj.props);
-
-  if (objectKeys.length !== thisKeys.length) {
-    return false;
-  }
-  return objectKeys.every(
-    key => !obj.props.hasOwnProperty(key) || obj.props[key] !== thisObj[key]
-  );
-};
-
-export class ValueObject<Props extends ValueObjectProps> {
+export abstract class ValueObject<Props extends {}> {
   props: Readonly<Props>;
 
   constructor(props: Props) {
@@ -32,6 +20,20 @@ export class ValueObject<Props extends ValueObjectProps> {
     if (obj.props === undefined) {
       return false;
     }
-    return shallowEqual(this, obj);
+    const shallowObjectEqual = (
+      props1: LiteralObject,
+      props2: LiteralObject
+    ) => {
+      const keys1 = Object.keys(props2);
+      const keys2 = Object.keys(props1);
+
+      if (keys1.length !== keys2.length) {
+        return false;
+      }
+      return keys1.every(
+        key => props2.hasOwnProperty(key) && props2[key] === props1[key]
+      );
+    };
+    return shallowObjectEqual(this.props, obj.props);
   }
 }
