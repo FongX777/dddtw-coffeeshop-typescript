@@ -2,6 +2,7 @@ import { DomainEvent } from './DomainEvent';
 import { EntityId } from '../EntityId';
 import { AggregateRoot } from '../AggregateRoot';
 
+
 type DomainEventHandler<T> = (event: T) => void;
 
 export class DomainEventPublisher {

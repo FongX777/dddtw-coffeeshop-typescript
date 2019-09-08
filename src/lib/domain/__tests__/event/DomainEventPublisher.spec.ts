@@ -73,7 +73,6 @@ describe('Domain Events Publisher', () => {
       const order = new Order(orderId, { status: OrderStatus.CLOSED });
 
       const mockHandler = jest.fn((event: OrderClosedEvent) => {});
-
       DomainEventPublisher.getInstance().register(
         OrderClosedEvent.name,
         mockHandler
