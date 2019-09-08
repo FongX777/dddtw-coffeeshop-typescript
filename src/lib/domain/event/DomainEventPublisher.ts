@@ -1,6 +1,6 @@
 import { DomainEvent } from './DomainEvent';
 
-export type DomainEventHandler<T extends DomainEvent> = (event: T) => void;
+export type DomainEventHandler<T> = (event: T) => void;
 
 export class DomainEventPublisher {
   private static instance: DomainEventPublisher;
@@ -19,14 +19,18 @@ export class DomainEventPublisher {
     return DomainEventPublisher.instance;
   }
 
-  register(
+  register<T extends DomainEvent>(
     eventClassName: string,
-    eventHandler: DomainEventHandler<DomainEvent>
+    eventHandler: DomainEventHandler<T>
   ): void {
     if (!this.handlersMap.hasOwnProperty(eventClassName)) {
-      this.handlersMap[eventClassName] = [eventHandler];
+      this.handlersMap[eventClassName] = [
+        eventHandler as DomainEventHandler<DomainEvent>,
+      ];
     } else {
-      this.handlersMap[eventClassName].push(eventHandler);
+      this.handlersMap[eventClassName].push(eventHandler as DomainEventHandler<
+        DomainEvent
+      >);
     }
   }
 
