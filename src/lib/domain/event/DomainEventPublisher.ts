@@ -1,11 +1,11 @@
 import { DomainEvent } from './DomainEvent';
 
-type DomainEventHandler<T extends DomainEvent> = (event: T) => void;
+export type DomainEventHandler<T extends DomainEvent> = (event: T) => void;
 
 export class DomainEventPublisher {
   private static instance: DomainEventPublisher;
   private handlersMap: {
-    [index: string]: DomainEventHandler<any>[]; // a event can have many subscribers
+    [index: string]: Array<DomainEventHandler<DomainEvent>>; // a event can have many subscribers
   };
 
   private constructor() {
@@ -19,9 +19,9 @@ export class DomainEventPublisher {
     return DomainEventPublisher.instance;
   }
 
-  public register<T extends DomainEvent>(
+  register(
     eventClassName: string,
-    eventHandler: DomainEventHandler<T>
+    eventHandler: DomainEventHandler<DomainEvent>
   ): void {
     if (!this.handlersMap.hasOwnProperty(eventClassName)) {
       this.handlersMap[eventClassName] = [eventHandler];
@@ -33,7 +33,7 @@ export class DomainEventPublisher {
   publish(event: DomainEvent): void {
     const eventClassName: string = event.constructor.name;
     if (this.handlersMap.hasOwnProperty(eventClassName)) {
-      const handlers: DomainEventHandler<any>[] = this.handlersMap[
+      const handlers: Array<DomainEventHandler<DomainEvent>> = this.handlersMap[
         eventClassName
       ];
       for (const handler of handlers) {
