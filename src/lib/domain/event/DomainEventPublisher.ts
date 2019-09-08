@@ -1,6 +1,8 @@
 import { DomainEvent } from './DomainEvent';
+import { EntityId } from '../EntityId';
+import { AggregateRoot } from '../AggregateRoot';
 
-export type DomainEventHandler<T> = (event: T) => void;
+type DomainEventHandler<T> = (event: T) => void;
 
 export class DomainEventPublisher {
   private static instance: DomainEventPublisher;
@@ -12,7 +14,7 @@ export class DomainEventPublisher {
     this.handlersMap = {};
   }
 
-  static getInstance() {
+  static getInstance(): DomainEventPublisher {
     if (!DomainEventPublisher.instance) {
       DomainEventPublisher.instance = new DomainEventPublisher();
     }
@@ -34,7 +36,19 @@ export class DomainEventPublisher {
     }
   }
 
-  publish(event: DomainEvent): void {
+  publishForAggregate<Id extends EntityId<unknown>, Props>(
+    aggregate: AggregateRoot<Id, Props>
+  ): void {
+    const events = aggregate.domainEvents;
+    this.publishAll(events);
+    aggregate.clearEvents();
+  }
+
+  clearHandlers(): void {
+    this.handlersMap = {};
+  }
+
+  private publish(event: DomainEvent): void {
     const eventClassName: string = event.constructor.name;
     if (this.handlersMap.hasOwnProperty(eventClassName)) {
       const handlers: Array<DomainEventHandler<DomainEvent>> = this.handlersMap[
@@ -46,7 +60,7 @@ export class DomainEventPublisher {
     }
   }
 
-  publishAll(events: DomainEvent[]): void {
+  private publishAll(events: DomainEvent[]): void {
     for (const event of events) {
       this.publish(event);
     }
