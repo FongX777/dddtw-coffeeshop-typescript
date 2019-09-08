@@ -9,6 +9,9 @@ class TestAggregateRoot extends AggregateRoot<TestEntityId, TestEntityProps> {}
 
 class TestRepository implements Repository<TestEntityId, TestAggregateRoot> {
   tests: TestAggregateRoot[];
+  nextId(): TestEntityId {
+    return new TestEntityId('');
+  }
   constructor() {
     this.tests = [];
   }
