@@ -34,7 +34,8 @@ class Order extends AggregateRoot<OrderId, OrderProps> {
   closeOrder(): void {
     if (this.props.status === OrderStatus.PROCESSING) {
       this.props.status = OrderStatus.CLOSED;
-      DomainEventPublisher.getInstance().publish(new OrderClosedEvent(this.id));
+      this.addDomainEvent(new OrderClosedEvent(this.id));
+      // DomainEventPublisher.getInstance().publish(new OrderClosedEvent(this.id));
     }
   }
 }
@@ -58,6 +59,7 @@ describe('Domain Events Publisher', () => {
       );
 
       order.closeOrder();
+      DomainEventPublisher.getInstance().publishForAggregate(order);
       expect(order.status).toBe(OrderStatus.CLOSED);
     });
 
@@ -74,6 +76,7 @@ describe('Domain Events Publisher', () => {
       );
 
       order.closeOrder();
+      DomainEventPublisher.getInstance().publishForAggregate(order);
       expect(order.status).toBe(OrderStatus.CLOSED);
     });
   });
