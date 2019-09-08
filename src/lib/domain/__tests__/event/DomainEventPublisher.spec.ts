@@ -1,9 +1,6 @@
 import { EntityId } from '../../EntityId';
 import { AggregateRoot } from '../../AggregateRoot';
-import {
-  DomainEventPublisher,
-  DomainEventHandler,
-} from '../../event/DomainEventPublisher';
+import { DomainEventPublisher } from '../../event/DomainEventPublisher';
 import { DomainEvent } from '../../event/DomainEvent';
 
 class OrderId extends EntityId<string> {}
@@ -50,10 +47,10 @@ describe('Domain Events Publisher', () => {
       const orderIdStr = '123456789';
       const order = Order.placeOrder(orderIdStr);
 
-      const handler = ((event: OrderClosedEvent) => {
+      const handler = (event: OrderClosedEvent) => {
         const { orderId } = event;
         expect(orderId.equals(order.id)).toBeTruthy();
-      }) as DomainEventHandler<DomainEvent>;
+      };
 
       DomainEventPublisher.getInstance().register(
         OrderClosedEvent.name,
@@ -68,9 +65,9 @@ describe('Domain Events Publisher', () => {
       const orderId = new OrderId('123456789');
       const order = new Order(orderId, { status: OrderStatus.CLOSED });
 
-      const handler = ((event: OrderClosedEvent) => {
+      const handler = (event: OrderClosedEvent) => {
         fail();
-      }) as DomainEventHandler<DomainEvent>;
+      };
       DomainEventPublisher.getInstance().register(
         OrderClosedEvent.name,
         handler
