@@ -10,23 +10,24 @@ export enum ItemCategory {
 
 interface InventoryItemProps {
   name: string;
-  sku: string;
+  category: ItemCategory;
   price: number;
+  sku: string;
   manufacturer: string;
-  itemCategory: ItemCategory;
   inboundUnitName: string;
   capacity: number;
 }
 
 export class InventoryItem extends ValueObject<InventoryItemProps> {
-  static build(params: InventoryItemProps) {
+  private static build(params: InventoryItemProps): InventoryItem {
     return new InventoryItem(params);
   }
 
-  static createMilkItem(params: {
+  static create(params: {
     name: string;
-    sku?: string;
+    category: ItemCategory;
     price: number;
+    sku?: string;
     manufacturer?: string;
     inboundUnitName?: string;
     capacity?: number;
@@ -36,7 +37,7 @@ export class InventoryItem extends ValueObject<InventoryItemProps> {
       sku: params.sku || '',
       price: params.price,
       manufacturer: params.manufacturer || '',
-      itemCategory: ItemCategory.Milk,
+      category: ItemCategory.Milk,
       inboundUnitName: params.inboundUnitName || '',
       capacity: params.capacity || 0,
     });

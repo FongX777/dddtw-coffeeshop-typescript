@@ -1,7 +1,10 @@
 import uuidv4 from 'uuid/v4';
 
-import { InventoryRepository } from '../../../domain/inventory/inventoryRepository';
-import { Inventory, InventoryId } from '../../../domain/inventory/index';
+import {
+  Inventory,
+  InventoryId,
+  InventoryRepository,
+} from '../../../domain/inventory';
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   inventories: Inventory[];
