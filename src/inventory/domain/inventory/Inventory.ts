@@ -28,4 +28,28 @@ export class Inventory extends AggregateRoot<InventoryId, InventoryProps> {
       item: params.item,
     });
   }
+
+  inbound(amount: number): void {
+    if (amount < 0) {
+      throw new Error('amount can not be negative digital');
+    }
+    // if (this.qty < amount < MAX) {
+    //     throw new Error('OverQtyLimitationException(amount');
+    // }
+
+    this.props.qty += amount;
+    // this.ApplyEvent(new Inbounded(this.Id, amount, this.Qty));
+  }
+
+  outbound(amount: number): void {
+    if (amount < 0) {
+      throw new Error('amount can not be negative digital');
+    }
+    if (this.qty < amount) {
+      throw new Error('InventoryShortageException(amount)');
+    }
+
+    this.props.qty -= amount;
+    // this.ApplyEvent(new Outbounded(this.Id, amount, this.Qty));
+  }
 }
