@@ -1,0 +1,37 @@
+import {
+  Inventory,
+  InventoryItem,
+  ItemCategory,
+} from '../../../domain/inventory';
+import { InMemoryInventoryRepository } from '../../../infrasture/repository/inventory/InMemoryInventoryRepository';
+import { Inboud, InboudOutput, InboundInput } from '../Inbound';
+
+describe('Add inventory', () => {
+  describe('Given an inventory to be created', () => {
+    const inventoryRepo = new InMemoryInventoryRepository();
+    const id = inventoryRepo.nextId();
+    beforeEach(async () => {
+      const newInventory = Inventory.create({
+        id,
+        qty: 10,
+        item: new InventoryItem({
+          name: 'milk',
+          category: ItemCategory.Milk,
+          sku: '123',
+          price: 1000,
+          manufacturer: '123',
+          inboundUnitName: 'lt',
+          capacity: 20,
+        }),
+      });
+      await inventoryRepo.save(newInventory);
+    });
+    it('should be created', async () => {
+      const input: InboundInput = { id: id.toValue(), amount: 100 };
+      const svc = new Inboud(inventoryRepo);
+      const output: InboudOutput = await svc.execute(input);
+      expect(output.inventory.id).toBe(id.toValue());
+      expect(output.inventory.qty).toBe(110);
+    });
+  });
+});
