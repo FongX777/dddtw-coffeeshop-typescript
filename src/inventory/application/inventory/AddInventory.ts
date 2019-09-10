@@ -1,14 +1,15 @@
-import { Inventory } from '../../domain/inventory/index';
+import { Inventory, InventoryRepository } from '../../domain/inventory';
+import { InventoryDto, InventoryItemDto } from './dto/InventoryDto';
 import { InventoryItem } from '../../domain/inventory/InventoryItem';
-import { InventoryRepository } from '../../domain/inventory/inventoryRepository';
+import { toInventoryDto } from './dto/mapper';
 
 export interface AddInventoryInput {
   qty: number;
-  item: InventoryItem;
+  item: InventoryItemDto;
 }
 
 export interface AddInventoryOutput {
-  inventory: Inventory;
+  inventory: InventoryDto;
 }
 
 export class AddInventory {
@@ -22,11 +23,11 @@ export class AddInventory {
     const inventory = Inventory.create({
       id: inventoryId,
       qty: input.qty,
-      item: input.item,
+      item: InventoryItem.create(input.item),
     });
 
     this.inventoryRepo.save(inventory);
 
-    return { inventory };
+    return { inventory: toInventoryDto(inventory) };
   }
 }
