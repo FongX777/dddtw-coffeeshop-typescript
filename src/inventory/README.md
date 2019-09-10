@@ -1,4 +1,5 @@
-[AggregateRoot]庫存(Inventory):
+## [AggregateRoot]庫存(Inventory):
+
 (1) 數量(Qty)
 (2) 庫存品項(Item)
 (3) 庫存限制條件(Inventory Constraints)
