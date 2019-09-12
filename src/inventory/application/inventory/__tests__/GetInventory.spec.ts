@@ -1,5 +1,6 @@
 import {
   Inventory,
+  InventoryId,
   InventoryItem,
   ItemCategory,
 } from '../../../domain/inventory';
@@ -7,25 +8,31 @@ import { InMemoryInventoryRepository } from '../../../infrasture/repository/inve
 import { GetInventory, GetInventoryInput } from '../GetInventory';
 
 describe('Add inventory', () => {
+  const getDefaultParams = () => {
+    return {
+      id: new InventoryId('1234'),
+      qty: 10,
+      maxQty: 50,
+      shortageQtyThreshold: 0.3,
+      item: InventoryItem.create({
+        name: 'Milk',
+        category: ItemCategory.Milk,
+        price: 100,
+        inboundUnitName: 'bottle',
+        capacity: 2000,
+      }),
+    };
+  };
   describe('Given an inventory to be created', () => {
     const inventoryRepo = new InMemoryInventoryRepository();
     const id = inventoryRepo.nextId();
     beforeEach(async () => {
-      const newInventory = Inventory.create({
-        id,
-        qty: 10,
-        item: new InventoryItem({
-          name: 'milk',
-          category: ItemCategory.Milk,
-          sku: '123',
-          price: 1000,
-          manufacturer: '123',
-          inboundUnitName: 'lt',
-          capacity: 20,
-        }),
-      });
+      const params = getDefaultParams();
+      params.id = id;
+      const newInventory = Inventory.create(params);
       await inventoryRepo.save(newInventory);
     });
+
     it('should be created', async () => {
       const input: GetInventoryInput = { id: id.toValue() };
       const svc = new GetInventory(inventoryRepo);

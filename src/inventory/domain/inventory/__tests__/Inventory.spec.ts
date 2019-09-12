@@ -60,8 +60,8 @@ describe('Inventory', () => {
 
       it('should not inbound over max qty', () => {
         const actual = Inventory.create(params);
-        expect(() => actual.inbound(50)).toThrow();
-        expect(actual.qty).toBe(50);
+        expect(() => actual.inbound(100)).toThrow();
+        expect(actual.qty).toBe(0);
       });
     });
   });
