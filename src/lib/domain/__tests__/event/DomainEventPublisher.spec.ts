@@ -34,47 +34,54 @@ class Order extends AggregateRoot<OrderId, OrderProps> {
   closeOrder(): void {
     if (this.props.status === OrderStatus.PROCESSING) {
       this.props.status = OrderStatus.CLOSED;
-      DomainEventPublisher.getInstance().publish(new OrderClosedEvent(this.id));
+      this.addDomainEvent(new OrderClosedEvent(this.id));
+      // DomainEventPublisher.getInstance().publish(new OrderClosedEvent(this.id));
     }
   }
 }
 
 describe('Domain Events Publisher', () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    DomainEventPublisher.getInstance().clearHandlers();
+  });
 
   describe('Given a domain model', () => {
     it('should publish a domain event and the event should be handled', () => {
       const orderIdStr = '123456789';
       const order = Order.placeOrder(orderIdStr);
 
-      const handler = (event: OrderClosedEvent) => {
+      const mockHandler = jest.fn((event: OrderClosedEvent) => {
         const { orderId } = event;
         expect(orderId.equals(order.id)).toBeTruthy();
-      };
+      });
 
       DomainEventPublisher.getInstance().register(
         OrderClosedEvent.name,
-        handler
+        mockHandler
       );
 
       order.closeOrder();
+      DomainEventPublisher.getInstance().publishForAggregate(order);
       expect(order.status).toBe(OrderStatus.CLOSED);
+      expect(mockHandler).toHaveBeenCalledTimes(1);
+      const calledEventOrderId = mockHandler.mock.calls[0][0].orderId;
+      expect(calledEventOrderId.value).toBe(orderIdStr);
     });
 
     it('should not publish any domain since command failed', () => {
       const order = Order.placeOrder('123456789');
       order.closeOrder();
 
-      const handler = (event: OrderClosedEvent) => {
-        fail();
-      };
+      const mockHandler = jest.fn((event: OrderClosedEvent) => {});
       DomainEventPublisher.getInstance().register(
         OrderClosedEvent.name,
-        handler
+        mockHandler
       );
 
       order.closeOrder();
+      DomainEventPublisher.getInstance().publishForAggregate(order);
       expect(order.status).toBe(OrderStatus.CLOSED);
+      expect(mockHandler).not.toHaveBeenCalled();
     });
   });
 });
