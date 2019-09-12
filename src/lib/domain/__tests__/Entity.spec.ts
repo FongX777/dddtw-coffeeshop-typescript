@@ -31,6 +31,17 @@ class TestEntity extends Entity<TestEntityId, TestEntityProps> {
     }
     this.props.email = email;
   }
+
+  static create(params: {
+    id: string;
+    name: string;
+    email: string;
+  }): TestEntity {
+    return new TestEntity(new TestEntityId(params.id), {
+      name: params.name,
+      email: params.email,
+    });
+  }
 }
 
 describe('Entity', () => {
@@ -38,13 +49,10 @@ describe('Entity', () => {
   const email = 'test@mail.com';
   const idValue = '123456';
   const testEntityId = new TestEntityId(idValue);
-  const testEntity = new TestEntity(testEntityId, {
-    name,
-    email,
-  });
+  const testEntity = TestEntity.create({ id: idValue, name, email });
 
   it('should be created with correct values', () => {
-    expect(testEntity.id).toBe(testEntityId);
+    expect(testEntity.id.equals(testEntityId)).toBeTruthy();
   });
 
   it('should be mutable', () => {
@@ -60,20 +68,15 @@ describe('Entity', () => {
   });
 
   it('should have equality', () => {
-    const testEntity2 = new TestEntity(new TestEntityId(idValue), {
+    const testEntity = TestEntity.create({ id: idValue, name, email });
+    const testEntityWithDifferentId = TestEntity.create({
+      id: '654321',
       name,
       email,
     });
-    const testEntityWithDifferentId = new TestEntity(
-      new TestEntityId('654321'),
-      {
-        name,
-        email,
-      }
-    );
 
-    expect(testEntity.equals(testEntity2)).toBeTruthy();
-    expect(testEntityWithDifferentId.equals(testEntity2)).toBeFalsy();
+    expect(testEntity.equals(testEntity)).toBeTruthy();
+    expect(testEntityWithDifferentId.equals(testEntity)).toBeFalsy();
     expect(testEntity.equals()).toBeFalsy();
   });
 });
