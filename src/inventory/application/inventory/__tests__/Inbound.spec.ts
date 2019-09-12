@@ -14,7 +14,10 @@ describe('Add inventory', () => {
       const newInventory = Inventory.create({
         id,
         qty: 10,
-        item: new InventoryItem({
+
+        maxQty: 50,
+        shortageQtyThreshold: 0.3,
+        item: InventoryItem.create({
           name: 'milk',
           category: ItemCategory.Milk,
           sku: '123',

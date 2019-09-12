@@ -5,6 +5,8 @@ import { toInventoryDto } from './dto/mapper';
 
 export interface AddInventoryInput {
   qty: number;
+  maxQty: number;
+  shortageQtyThreshold: number;
   item: InventoryItemDto;
 }
 
@@ -23,6 +25,8 @@ export class AddInventory {
     const inventory = Inventory.create({
       id: inventoryId,
       qty: input.qty,
+      maxQty: input.maxQty,
+      shortageQtyThreshold: input.shortageQtyThreshold,
       item: InventoryItem.create(input.item),
     });
 

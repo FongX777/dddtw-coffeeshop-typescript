@@ -7,6 +7,8 @@ describe('Add inventory', () => {
     it('should be created', async () => {
       const input: AddInventoryInput = {
         qty: 10,
+        maxQty: 50,
+        shortageQtyThreshold: 0.3,
         item: {
           name: 'milk',
           category: ItemCategory.Milk,

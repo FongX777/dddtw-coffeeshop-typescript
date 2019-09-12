@@ -62,8 +62,8 @@ describe('Domain Events Publisher', () => {
     });
 
     it('should not publish any domain since command failed', () => {
-      const orderId = new OrderId('123456789');
-      const order = new Order(orderId, { status: OrderStatus.CLOSED });
+      const order = Order.placeOrder('123456789');
+      order.closeOrder();
 
       const handler = (event: OrderClosedEvent) => {
         fail();
