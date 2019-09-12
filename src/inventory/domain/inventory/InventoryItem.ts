@@ -16,6 +16,7 @@ interface InventoryItemProps {
   manufacturer: string;
   inboundUnitName: string;
   capacity: number;
+  capacityUnit: string;
 }
 
 export class InventoryItem extends ValueObject<InventoryItemProps> {
@@ -32,6 +33,29 @@ export class InventoryItem extends ValueObject<InventoryItemProps> {
     inboundUnitName?: string;
     capacity?: number;
   }): InventoryItem {
+    let capacityUnit = '';
+    switch (params.category) {
+      case ItemCategory.CoffeeBean: {
+        capacityUnit = 'g';
+        break;
+      }
+      case ItemCategory.FilterPaper: {
+        capacityUnit = 'piece';
+        break;
+      }
+      case ItemCategory.LowfatMilk: {
+        capacityUnit = 'ml';
+        break;
+      }
+      case ItemCategory.Milk: {
+        capacityUnit = 'ml';
+        break;
+      }
+      case ItemCategory.SoyMilk: {
+        capacityUnit = 'ml';
+        break;
+      }
+    }
     return InventoryItem.build({
       name: params.name,
       sku: params.sku || '',
@@ -40,6 +64,7 @@ export class InventoryItem extends ValueObject<InventoryItemProps> {
       category: ItemCategory.Milk,
       inboundUnitName: params.inboundUnitName || '',
       capacity: params.capacity || 0,
+      capacityUnit,
     });
   }
 }
