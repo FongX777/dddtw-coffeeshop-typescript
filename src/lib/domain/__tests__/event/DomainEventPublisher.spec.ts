@@ -21,6 +21,11 @@ class OrderClosedEvent extends DomainEvent {
 }
 
 class Order extends AggregateRoot<OrderId, OrderProps> {
+  static getClosedOrder(orderId: string): Order {
+    return new Order(new OrderId(orderId), {
+      status: OrderStatus.CLOSED,
+    });
+  }
   static placeOrder(orderId: string): Order {
     return new Order(new OrderId(orderId), {
       status: OrderStatus.PROCESSING,
@@ -62,8 +67,7 @@ describe('Domain Events Publisher', () => {
     });
 
     it('should not publish any domain since command failed', () => {
-      const order = Order.placeOrder('123456789');
-      order.closeOrder();
+      const order = Order.getClosedOrder('123456789');
 
       const handler = (event: OrderClosedEvent) => {
         fail();
