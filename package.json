@@ -15,7 +15,7 @@
     "pretest": "npm run compile",
     "posttest": "npm run check",
     "dev": "NODE_ENV=dev ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "codecov": "jest && codecov -t $CODE_COV_UPLOAD_TOKEN"
+    "codecov": "jest --coverage && codecov -t $CODE_COV_UPLOAD_TOKEN"
   },
   "keywords": [],
   "author": "",
