@@ -14,7 +14,6 @@ describe('Add inventory', () => {
       const newInventory = Inventory.create({
         id,
         qty: 10,
-
         maxQty: 50,
         shortageQtyThreshold: 0.3,
         item: InventoryItem.create({
@@ -30,11 +29,11 @@ describe('Add inventory', () => {
       await inventoryRepo.save(newInventory);
     });
     it('should be created', async () => {
-      const input: InboundInput = { id: id.toValue(), amount: 100 };
+      const input: InboundInput = { id: id.toValue(), amount: 10 };
       const svc = new Inboud(inventoryRepo);
       const output: InboudOutput = await svc.execute(input);
       expect(output.inventory.id).toBe(id.toValue());
-      expect(output.inventory.qty).toBe(110);
+      expect(output.inventory.qty).toBe(20);
     });
   });
 });
