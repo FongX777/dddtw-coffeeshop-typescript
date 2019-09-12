@@ -5,10 +5,17 @@ import { AggregateRoot } from '../AggregateRoot';
 class TestEntityId extends EntityId<string> {}
 interface TestEntityProps {}
 
-class TestAggregateRoot extends AggregateRoot<TestEntityId, TestEntityProps> {}
+class TestAggregateRoot extends AggregateRoot<TestEntityId, TestEntityProps> {
+  static create(id: TestEntityId) {
+    return new TestAggregateRoot(id, {});
+  }
+}
 
 class TestRepository implements Repository<TestEntityId, TestAggregateRoot> {
   tests: TestAggregateRoot[];
+  nextId(): TestEntityId {
+    return new TestEntityId('');
+  }
   constructor() {
     this.tests = [];
   }
@@ -39,7 +46,7 @@ class TestRepository implements Repository<TestEntityId, TestAggregateRoot> {
 describe('Repository', () => {
   const idValue = '123456';
   const testEntityId = new TestEntityId(idValue);
-  const testEntity = new TestAggregateRoot(testEntityId, {});
+  const testEntity = TestAggregateRoot.create(testEntityId);
   const repo = new TestRepository();
 
   it('should create successfully', async () => {
