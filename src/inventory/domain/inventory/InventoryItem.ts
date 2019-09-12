@@ -55,6 +55,9 @@ export class InventoryItem extends ValueObject<InventoryItemProps> {
         capacityUnit = 'ml';
         break;
       }
+      default: {
+        capacityUnit = 'piece';
+      }
     }
     return InventoryItem.build({
       name: params.name,
