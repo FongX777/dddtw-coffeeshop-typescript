@@ -14,6 +14,8 @@ jobs:
         run: npm run compile
 
       - name: "npm run test"
+        env:
+          CODE_COV_UPLOAD_TOKEN: ${{ secrets.CODE_COV_UPLOAD_TOKEN }}
         run: npm run codecov
 
       - name: "check for uncommitted changes"
