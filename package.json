@@ -22,7 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^12.11.6",
-    "codecov": "^3.5.0",
+    "codecov": "^3.6.2",
     "gts": "^1.1.0",
     "jest": "^24.9.0",
     "ts-jest": "^24.0.2",
